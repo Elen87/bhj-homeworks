@@ -1,23 +1,36 @@
 class Game {
-  constructor(container) {
-    this.container = container;
-    this.wordElement = container.querySelector('.word');
-    this.winsElement = container.querySelector('.status__wins');
-    this.lossElement = container.querySelector('.status__loss');
-
-    this.reset();
-
-    this.registerEvents();
+ constructor(container) {
+ this.container = container;
+ this.wordElement = container.querySelector('.word');
+ this.winsElement = container.querySelector('.status__wins');
+ this.lossElement = container.querySelector('.status__loss');
+ 
+ this.reset();
+ 
+ this.registerEvents();
   }
-
-  reset() {
-    this.setNewWord();
-    this.winsElement.textContent = 0;
-    this.lossElement.textContent = 0;
+ 
+ reset() {
+ this.setNewWord();
+ this.winsElement.textContent = 0;
+ this.lossElement.textContent = 0;
   }
-
-  registerEvents() {
-    /*
+ 
+ registerEvents() {
+ document.addEventListener(`keydown`, button => {
+ const symbol = this.currentSymbol;
+ if ([32, 65, 67, 69, 83, 84, 91, 92].includes(button.key.charCodeAt())) {
+ return
+      }
+ if (button.repeat) {
+ return
+      }
+ if (button.key.toLowerCase() === symbol.textContent.toLowerCase()) {
+ return this.success();
+      }
+ return this.fail();
+    })
+ /*
       TODO:
       Написать обработчик события, который откликается
       на каждый введённый символ.
@@ -26,69 +39,68 @@ class Game {
       DOM-элемент текущего символа находится в свойстве this.currentSymbol.
      */
   }
-
-  success() {
-    if(this.currentSymbol.classList.contains("symbol_current")) this.currentSymbol.classList.remove("symbol_current");
-    this.currentSymbol.classList.add('symbol_correct');
-    this.currentSymbol = this.currentSymbol.nextElementSibling;
-
-    if (this.currentSymbol !== null) {
-      this.currentSymbol.classList.add('symbol_current');
-      return;
+ 
+ success() {
+ if(this.currentSymbol.classList.contains("symbol_current")) this.currentSymbol.classList.remove("symbol_current");
+ this.currentSymbol.classList.add('symbol_correct');
+ this.currentSymbol = this.currentSymbol.nextElementSibling;
+ 
+ if (this.currentSymbol !== null) {
+ this.currentSymbol.classList.add('symbol_current');
+ return;
     }
-
-    if (++this.winsElement.textContent === 10) {
-      alert('Победа!');
-      this.reset();
+ 
+ if (++this.winsElement.textContent === 10) {
+ alert('Победа!');
+ this.reset();
     }
-    this.setNewWord();
+ this.setNewWord();
   }
-
-  fail() {
-    if (++this.lossElement.textContent === 5) {
-      alert('Вы проиграли!');
-      this.reset();
+ 
+ fail() {
+ if (++this.lossElement.textContent === 5) {
+ alert('Вы проиграли!');
+ this.reset();
     }
-    this.setNewWord();
+ this.setNewWord();
   }
-
-  setNewWord() {
-    const word = this.getWord();
-
-    this.renderWord(word);
+ 
+ setNewWord() {
+ const word = this.getWord();
+ 
+ this.renderWord(word);
   }
-
-  getWord() {
-    const words = [
-        'bob',
-        'awesome',
-        'netology',
-        'hello',
-        'kitty',
-        'rock',
-        'youtube',
-        'popcorn',
-        'cinema',
-        'love',
-        'javascript'
+ 
+ getWord() {
+ const words = [
+ 'bob',
+ 'awesome',
+ 'netology',
+ 'hello',
+ 'kitty',
+ 'rock',
+ 'youtube',
+ 'popcorn',
+ 'cinema',
+ 'love',
+ 'javascript'
       ],
-      index = Math.floor(Math.random() * words.length);
-
-    return words[index];
+ index = Math.floor(Math.random() * words.length);
+ 
+ return words[index];
   }
-
-  renderWord(word) {
-    const html = [...word]
+ 
+ renderWord(word) {
+ const html = [...word]
       .map(
         (s, i) =>
-          `<span class="symbol ${i === 0 ? 'symbol_current': ''}">${s}</span>`
+ `<span class="symbol ${i === 0 ? 'symbol_current': ''}">${s}</span>`
       )
       .join('');
-    this.wordElement.innerHTML = html;
-
-    this.currentSymbol = this.wordElement.querySelector('.symbol_current');
+ this.wordElement.innerHTML = html;
+ 
+ this.currentSymbol = this.wordElement.querySelector('.symbol_current');
   }
 }
-
+ 
 new Game(document.getElementById('game'))
-
